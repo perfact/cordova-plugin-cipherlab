@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="de.perfact.cordova.cipherlabs" version="1.0.0">
+        id="cordova-plugin-cipherlab" version="1.0.0">
 
     <name>cordova-plugin-cipherlab</name>
 
@@ -14,7 +14,8 @@
     </engines>
 
     <platform name="android">
-        <source-file src="src/android/CipherlabScanner.java" target-dir="src/de/perfact/cordova/cipherlab" />
+        <source-file src="src/android/CipherlabScanner.java" target-dir="src/perfact/cordova-plugin-cipherlab" />
+        <source-file src="src/android/BarcodeAPI_V1_1_60.jar" target-dir="app/libs" />
     </platform>
 
 </plugin>
