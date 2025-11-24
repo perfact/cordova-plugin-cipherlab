@@ -14,8 +14,18 @@
     </engines>
 
     <platform name="android">
-        <source-file src="src/android/CipherlabScanner.java" target-dir="src/perfact/cordova-plugin-cipherlab" />
+        <source-file src="src/android/CipherlabScanner.java" target-dir="src/de/perfact/cordova/cipherlab" />
         <source-file src="src/android/BarcodeAPI_V1_1_60.jar" target-dir="app/libs" />
+
+        <config-file target="config.xml" parent="/*">
+            <feature name="CipherlabScanner">
+                <param name="android-package" value="de.perfact.cordova.cipherlab.CipherlabScanner" />
+            </feature>
+        </config-file>
+
+        <js-module src="www/cipherlabscanner.js" name="CipherlabScanner">
+            <clobbers target="window.CipherlabScanner" />
+        </js-module>
     </platform>
 
 </plugin>
