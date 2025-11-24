@@ -1,9 +1,13 @@
 package de.perfact.cordova.cipherlabscanner;
 
-package com.example.cipherlabscanner;
+import com.cipherlab.barcode.*;
+import com.cipherlab.barcodebase.*;
+import com.cipherlab.barcode.decoder.*;
+import com.cipherlab.barcode.decoderparams.*;
 
 import com.cipherlab.barcode.ReaderManager;
 import com.cipherlab.barcodebase.ClResult;
+
 import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
