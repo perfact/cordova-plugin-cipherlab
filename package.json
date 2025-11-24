@@ -1,0 +1,20 @@
+{
+  "name": "cordova-plugin-cipherlab",
+  "version": "1.0.0",
+  "description": "Cipherlab Scanner Plugin",
+  "types": "./types/index.d.ts",
+  "cordova": {
+    "id": "cordova-plugin-cipherlab",
+    "platforms": [
+      "android"
+    ]
+  },
+  "scripts": {
+  },
+  "engines": {
+  },
+  "author": "PerFact Innovation",
+  "license": "GPL-2.0-only",
+  "devDependencies": {
+  }
+}

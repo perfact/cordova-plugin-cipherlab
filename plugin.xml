@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="de.perfact.cordova.cipherlabs" version="1.0.0">
+
+    <name>cordova-plugin-cipherlab</name>
+
+    <description>A Cipherlab barcode scanner plugin</description>
+    <license>GPL-2.0-only</license>
+    <keywords>cordova, plugin, cipherlabs</keywords>
+    <repo>https://git.perfact.de/Playground/cordova-example-plugin.git</repo>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0"/>
+    </engines>
+
+    <platform name="android">
+        <source-file src="src/android/CipherlabScanner.java" target-dir="src/de/perfact/cordova/cipherlab" />
+    </platform>
+
+</plugin>
