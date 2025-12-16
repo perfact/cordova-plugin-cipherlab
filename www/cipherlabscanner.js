@@ -1,4 +1,4 @@
-// www/cipherlab-scanner.js
+// www/cipherlabscanner.js
 var exec = require('cordova/exec');
 
 var CipherlabScanner = {

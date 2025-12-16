@@ -11,16 +11,40 @@ import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
 public class CipherlabScanner extends CordovaPlugin {
 
     private static final String TAG = "CipherlabScanner";
     private ReaderManager mReaderManager;
+    private boolean isReaderServiceConnected = false;
+    private BroadcastReceiver readerConnReceiver;
 
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
-        // Init ReaderManager when plugin starts
-        mReaderManager = ReaderManager.InitInstance(cordova.getActivity());
+        Activity activity = cordova.getActivity();
+        mReaderManager = ReaderManager.InitInstance(activity);
+        // NEW: listen for ReaderService connection
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(GeneralString.Intent_READERSERVICE_CONNECTED);
+
+        readerConnReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "onReceive: " + intent.getAction());
+                if (GeneralString.Intent_READERSERVICE_CONNECTED.equals(intent.getAction())) {
+                    Log.d(TAG, "ReaderService connected (broadcast received)");
+                    isReaderServiceConnected = true;
+                }
+            }
+        };
+        activity.registerReceiver(readerConnReceiver, filter);
+
         Log.d(TAG, "plugin initialized: " + mReaderManager.toString());
     }
 
@@ -34,6 +58,8 @@ public class CipherlabScanner extends CordovaPlugin {
                 cb.error("ReaderManager not initialized");
                 return true;
             }
+            Log.d(TAG, "isReaderServiceConnected = " + isReaderServiceConnected);
+
             boolean curr_active = mReaderManager.GetActive();
             Log.d(TAG, "current GetActive state: " + curr_active);
             ClResult res = mReaderManager.SetActive(enable);
@@ -51,6 +77,13 @@ public class CipherlabScanner extends CordovaPlugin {
 
     @Override
     public void onDestroy() {
+        Activity activity = cordova.getActivity();
+        if (readerConnReceiver != null) {
+            try {
+                activity.unregisterReceiver(readerConnReceiver);
+            } catch (IllegalArgumentException ignore) {}
+            readerConnReceiver = null;
+        }
         if (mReaderManager != null) {
             mReaderManager.Release();
             mReaderManager = null;
