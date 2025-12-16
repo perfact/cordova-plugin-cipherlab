@@ -51,6 +51,11 @@ public class CipherlabScanner extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext cb) throws JSONException {
         Log.d(TAG, "execute called: " + action);
+        if (!isReaderServiceConnected) {
+            Log.d(TAG, "Service not connected");
+            cb.error("Service not connected");
+            return false;
+        }
         if ("setScannerEnabled".equals(action)) {
             boolean enable = args.getBoolean(0);
             if (mReaderManager == null) {
