@@ -58,7 +58,7 @@ public class CipherlabScanner extends CordovaPlugin {
         }
         switch (action) {
             case "setScannerEnabled":
-                setScannerEnabled(args.getBoolean(0));
+                setScannerEnabled(args.getBoolean(0), cb);
                 break;
             default:
                 return false;
@@ -66,11 +66,10 @@ public class CipherlabScanner extends CordovaPlugin {
         return true;
     }
 
-    private void setScannerEnabled(Boolean enable) {
+    private void setScannerEnabled(Boolean enable, CallbackContext cb) {
         if (mReaderManager == null) {
             Log.d(TAG, "ReaderManager not initialized");
             cb.error("ReaderManager not initialized");
-            return true;
         }
         Log.d(TAG, "isReaderServiceConnected = " + isReaderServiceConnected);
 
