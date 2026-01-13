@@ -56,28 +56,34 @@ public class CipherlabScanner extends CordovaPlugin {
             cb.error("Service not connected");
             return false;
         }
-        if ("setScannerEnabled".equals(action)) {
-            boolean enable = args.getBoolean(0);
-            if (mReaderManager == null) {
-                Log.d(TAG, "ReaderManager not initialized");
-                cb.error("ReaderManager not initialized");
-                return true;
-            }
-            Log.d(TAG, "isReaderServiceConnected = " + isReaderServiceConnected);
-
-            boolean curr_active = mReaderManager.GetActive();
-            Log.d(TAG, "current GetActive state: " + curr_active);
-            ClResult res = mReaderManager.SetActive(enable);
-            if (res == ClResult.S_OK) {
-                Log.d(TAG, "setScannerEnabled successful!");
-                cb.success();
-            } else {
-                Log.d(TAG, "SetActive failed: " + res.toString());
-                cb.error("SetActive failed: " + res.toString());
-            }
-            return true;
+        switch (action) {
+            case "setScannerEnabled":
+                setScannerEnabled(args.getBoolean(0), cb);
+                break;
+            default:
+                return false;
         }
-        return false;
+        return true;
+    }
+
+    private void setScannerEnabled(Boolean enable, CallbackContext cb) {
+        if (mReaderManager == null) {
+            Log.d(TAG, "ReaderManager not initialized");
+            cb.error("ReaderManager not initialized");
+            return;
+        }
+        Log.d(TAG, "isReaderServiceConnected = " + isReaderServiceConnected);
+
+        boolean curr_active = mReaderManager.GetActive();
+        Log.d(TAG, "current GetActive state: " + curr_active);
+        ClResult res = mReaderManager.SetActive(enable);
+        if (res == ClResult.S_OK) {
+            Log.d(TAG, "setScannerEnabled successful!");
+            cb.success();
+        } else {
+            Log.d(TAG, "SetActive failed: " + res.toString());
+            cb.error("SetActive failed: " + res.toString());
+        }
     }
 
     @Override

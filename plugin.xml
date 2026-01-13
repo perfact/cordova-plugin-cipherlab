@@ -7,7 +7,7 @@
     <description>A Cipherlab barcode scanner plugin</description>
     <license>GPL-2.0-only</license>
     <keywords>cordova, plugin, cipherlabs</keywords>
-    <repo>https://git.perfact.de/Playground/cordova-example-plugin.git</repo>
+    <repo>https://github.com/perfact/cordova-plugin-cipherlab.git</repo>
 
     <engines>
         <engine name="cordova" version=">=3.0.0"/>
