@@ -70,6 +70,7 @@ public class CipherlabScanner extends CordovaPlugin {
         if (mReaderManager == null) {
             Log.d(TAG, "ReaderManager not initialized");
             cb.error("ReaderManager not initialized");
+            return;
         }
         Log.d(TAG, "isReaderServiceConnected = " + isReaderServiceConnected);
 
