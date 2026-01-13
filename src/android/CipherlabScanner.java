@@ -23,6 +23,7 @@ public class CipherlabScanner extends CordovaPlugin {
     private ReaderManager mReaderManager;
     private boolean isReaderServiceConnected = false;
     private BroadcastReceiver readerConnReceiver;
+    private final CipherlabScannerLogic logic = new CipherlabScannerLogic();
 
     @Override
     protected void pluginInitialize() {
@@ -51,39 +52,47 @@ public class CipherlabScanner extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext cb) throws JSONException {
         Log.d(TAG, "execute called: " + action);
-        if (!isReaderServiceConnected) {
-            Log.d(TAG, "Service not connected");
-            cb.error("Service not connected");
-            return false;
-        }
         switch (action) {
             case "setScannerEnabled":
-                setScannerEnabled(args.getBoolean(0), cb);
-                break;
+                CipherlabScannerLogic.ActionResult result = setScannerEnabled(args.getBoolean(0));
+                if (result.success) {
+                    cb.success();
+                } else {
+                    cb.error(result.errorMessage);
+                }
+                return result.returnValue;
             default:
                 return false;
         }
-        return true;
     }
 
-    private void setScannerEnabled(Boolean enable, CallbackContext cb) {
-        if (mReaderManager == null) {
-            Log.d(TAG, "ReaderManager not initialized");
-            cb.error("ReaderManager not initialized");
-            return;
-        }
+    private CipherlabScannerLogic.ActionResult setScannerEnabled(boolean enable) {
         Log.d(TAG, "isReaderServiceConnected = " + isReaderServiceConnected);
 
-        boolean curr_active = mReaderManager.GetActive();
-        Log.d(TAG, "current GetActive state: " + curr_active);
-        ClResult res = mReaderManager.SetActive(enable);
-        if (res == ClResult.S_OK) {
-            Log.d(TAG, "setScannerEnabled successful!");
-            cb.success();
-        } else {
-            Log.d(TAG, "SetActive failed: " + res.toString());
-            cb.error("SetActive failed: " + res.toString());
+        CipherlabScannerLogic.ReaderManagerFacade readerManager = null;
+        if (mReaderManager != null) {
+            boolean curr_active = mReaderManager.GetActive();
+            Log.d(TAG, "current GetActive state: " + curr_active);
+            readerManager = new CipherlabScannerLogic.ReaderManagerFacade() {
+                @Override
+                public CipherlabScannerLogic.SetActiveResult setActive(boolean enabled) {
+                    ClResult res = mReaderManager.SetActive(enabled);
+                    if (res == ClResult.S_OK) {
+                        return CipherlabScannerLogic.SetActiveResult.ok();
+                    }
+                    return CipherlabScannerLogic.SetActiveResult.error(res.toString());
+                }
+            };
         }
+
+        CipherlabScannerLogic.ActionResult result =
+                logic.setScannerEnabled(enable, isReaderServiceConnected, readerManager);
+        if (result.success) {
+            Log.d(TAG, "setScannerEnabled successful!");
+        } else {
+            Log.d(TAG, result.errorMessage);
+        }
+        return result;
     }
 
     @Override
